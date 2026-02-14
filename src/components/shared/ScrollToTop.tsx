@@ -88,7 +88,7 @@ export const ScrollToTop: React.FC = () => {
       custom={distance}
     >
       <motion.img
-        src="./hero-up.png"
+        src="./superhero.png"
         alt=""
         width={42}
         height={42}

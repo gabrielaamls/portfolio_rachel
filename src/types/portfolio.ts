@@ -72,6 +72,8 @@ export type Skill = {
     | "devops"
     | "tooling"
     | "database"
+    | "design"
+    | "testing"
     | "other";
   note?: string; // optional note e.g. "used at work since 2020"
 };
@@ -98,6 +100,7 @@ export type Project = {
   image?: string; // preview image path
   href?: string; // live url (for playground)
   links?: ProjectLink[]; // alternate links
+  bullets?: string[]; // project highlights
   date?: DateRange | string;
   featured?: boolean;
   isUnderDevelopment?: boolean;
@@ -121,6 +124,7 @@ export type Education = {
   school?: string;
   date?: DateRange | string;
   location?: string;
+  gpa?: string;
   summary?: string;
 };
 
@@ -156,6 +160,17 @@ export type Portfolio = {
   certifications?: Certification[];
   extras?: {
     volunteer?: Role[];
+    organizations?: {
+      name: string;
+      role?: string;
+      date?: string;
+      description?: string;
+    }[];
+    softSkills?: {
+      name: string;
+      description?: string;
+      icon?: string;
+    }[];
     languages?: { name: string; level?: string }[];
     interests?: string[]; // e.g. "astronomy, photography"
   };

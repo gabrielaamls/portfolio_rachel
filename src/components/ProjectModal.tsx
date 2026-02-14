@@ -190,61 +190,100 @@ export const ProjectModal: React.FC<{
                           className="rounded-lg border border-[var(--border)] mb-4 w-full h-auto object-cover max-h-60"
                         />
                       )}
-                      {/* Description */}
-                      <p className="text-sm text-[var(--text)] mb-4">
-                        {project.description}
-                      </p>
 
-                      {/* Links */}
-                      {project.links && project.links.length > 0 && (
-                        <div className="flex gap-3 flex-wrap mb-4">
-                          {project.href && (
-                            <a
-                              href={project.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:underline"
-                            >
-                              {FaLink && <FaLink className="w-4 h-4" />} Demo
-                            </a>
-                          )}
-                          {project.links.map((link) => {
-                            const Icon =
-                              SiIcons[link.icon as keyof typeof SiIcons] ??
-                              FaIcons[link.icon as keyof typeof FaIcons];
-                            return (
-                              <a
-                                key={link.label}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:underline"
-                              >
-                                {Icon && <Icon className="w-4 h-4" />}
-                                {link.label}
-                              </a>
-                            );
-                          })}
+                      {/* Date */}
+                      {project.date && (
+                        <div className="flex items-center gap-2 mb-3 text-sm text-[var(--muted)]">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span>
+                            {typeof project.date === 'string'
+                              ? project.date
+                              : `${project.date.start} - ${project.date.end || 'Present'}`}
+                          </span>
                         </div>
                       )}
 
-                      {/* Tags */}
-                      <div className="mt-3 flex gap-2 flex-wrap">
-                        {project.tags?.map((t) => (
-                          <span
-                            key={t}
-                            className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                              tagColors[t] || "bg-gray-100 text-gray-800"
-                            }`}
-                          >
-                            {t}
-                          </span>
-                        ))}
-                      </div>
+                      {/* Description */}
+                      <p className="text-sm text-[var(--text)] mb-4 leading-relaxed">
+                        {project.description}
+                      </p>
+
+                      {/* Bullets/Achievements */}
+                      {project.bullets && project.bullets.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="text-sm font-semibold text-[var(--brand)] mb-2">Key Contributions</h4>
+                          <ul className="space-y-2">
+                            {project.bullets.map((bullet, i) => (
+                              <li key={i} className="text-sm text-[var(--text)] flex items-start">
+                                <span className="text-[var(--brand)] mr-2 mt-1">▸</span>
+                                <span className="leading-relaxed">{bullet}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Tech Stack - Prominent Display */}
+                      {project.tags && project.tags.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="text-sm font-semibold text-[var(--brand)] mb-2">Technologies Used</h4>
+                          <div className="flex gap-2 flex-wrap">
+                            {project.tags.map((t) => (
+                              <span
+                                key={t}
+                                className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
+                                  tagColors[t] || "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Links */}
+                      {(project.links || project.href) && (
+                        <div className="mb-4 pb-4 border-b border-[var(--border)]">
+                          <h4 className="text-sm font-semibold text-[var(--brand)] mb-2">Project Links</h4>
+                          <div className="flex gap-3 flex-wrap">
+                            {project.href && (
+                              <a
+                                href={project.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border-2 border-[var(--brand)] bg-[var(--brand)]/10 text-[var(--brand)] hover:bg-[var(--brand)] hover:text-white transition-all"
+                              >
+                                {FaLink && <FaLink className="w-4 h-4" />} 
+                                Live Demo
+                              </a>
+                            )}
+                            {project.links?.map((link) => {
+                              const Icon =
+                                SiIcons[link.icon as keyof typeof SiIcons] ??
+                                FaIcons[link.icon as keyof typeof FaIcons];
+                              return (
+                                <a
+                                  key={link.label}
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--brand)] hover:bg-[var(--brand)]/5 transition-all"
+                                >
+                                  {Icon && <Icon className="w-4 h-4" />}
+                                  {link.label}
+                                </a>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
 
                       {/* README */}
                       {readme && (
-                        <div className="h-full overflow-auto rounded-md border border-[var(--border)] bg-[var(--surface)] mt-6">
+                        <div className="h-full overflow-auto rounded-md border border-[var(--border)] bg-[var(--surface)] mt-4">
                           <div
                             className="p-4 markdown-body"
                             style={{

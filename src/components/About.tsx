@@ -1,5 +1,5 @@
 import { animate, motion } from "framer-motion";
-import { useMemo, useRef, useState, useLayoutEffect } from "react";
+import { useMemo } from "react";
 import { PORTFOLIO_INFO } from "../config/portfolioData";
 import type { AvatarItem } from "../types/portfolio";
 
@@ -30,39 +30,6 @@ export const About: React.FC = () => {
     show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
   };
 
-  // helper to create a rounded-rect path. we inset by strokeWidth/2 (1 unit) so the stroke outer edge sits flush with the SVG edge
-  const roundedRectPath = (
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    r: number,
-  ) => {
-    // Clamp radius
-    const radius = Math.min(r, w / 2, h / 2);
-    const x0 = x + radius;
-    const x1 = x + w - radius;
-    const y0 = y + radius;
-    const y1 = y + h - radius;
-    return [
-      `M ${x0} ${y}`,
-      `H ${x1}`,
-      `A ${radius} ${radius} 0 0 1 ${x + w} ${y0}`,
-      `V ${y1}`,
-      `A ${radius} ${radius} 0 0 1 ${x1} ${y + h}`,
-      `H ${x0}`,
-      `A ${radius} ${radius} 0 0 1 ${x} ${y1}`,
-      `V ${y0}`,
-      `A ${radius} ${radius} 0 0 1 ${x0} ${y}`,
-      `Z`,
-    ].join(" ");
-  };
-  // panel ref + dynamic corner matching
-  const panelRef = useRef<HTMLDivElement | null>(null);
-  const [cornerR, setCornerR] = useState<number>(3); // in viewBox units (0..100)
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  // Coverflow carousel items
   // Support avatar being:
   // - a single string URL
   // - a single object { url, label }
@@ -86,44 +53,6 @@ export const About: React.FC = () => {
           label: it.label ?? `Image ${idx + 1}`,
         }))
       : [{ id: 1, image: "/placeholder-1.jpg", label: "Profile" }];
-
-  // compute corner radius in viewBox units to match the panel's computed border-radius
-  useLayoutEffect(() => {
-    const el = panelRef.current;
-    if (!el) return;
-
-    const computeRadius = () => {
-      const rect = el.getBoundingClientRect();
-      const style = getComputedStyle(el);
-      // borderRadius may be like '16px' or '1rem' but getComputedStyle returns px
-      const brPx = Number.parseFloat(style.borderRadius || "0") || 0;
-      const scale = rect.width > 0 ? 100 / rect.width : 1;
-      const rView = Math.max(0, Math.min(50, brPx * scale));
-      setCornerR(rView);
-    };
-
-    // compute initially
-    computeRadius();
-
-    // Observe size changes so the SVG corner radius stays in sync responsively
-    let ro: ResizeObserver | null = null;
-    if (typeof ResizeObserver === "function") {
-      ro = new ResizeObserver(() => computeRadius());
-      ro.observe(el);
-    } else {
-      // fallback to window resize handler if ResizeObserver is unavailable
-      const onResize = () => computeRadius();
-      window.addEventListener("resize", onResize);
-      return () => window.removeEventListener("resize", onResize);
-    }
-
-    return () => {
-      if (ro) ro.disconnect();
-    };
-  }, []);
-
-  // use inset 1 (half of strokeWidth=2) so outer edge aligns with 0..100 viewBox bounds
-  const borderD = roundedRectPath(1, 1, 98, 98, cornerR);
 
   const springScrollTo = (y: number) => {
     const controls = animate(window.scrollY, y, {
@@ -187,74 +116,41 @@ export const About: React.FC = () => {
         >
           {/* Left: Headline + features + CTAs */}
           <motion.div variants={item} className="md:col-span-7">
-            <div className="panel-translucent relative overflow-hidden p-6 md:p-8 rounded-2xl">
-              {/* Animated border beam (multiple motion.paths following the rounded rect) */}
-              <motion.svg
-                className="absolute inset-0 w-full h-full pointer-events-none z-0"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="none"
-                aria-hidden
-              >
-                <defs>
-                  {["a", "b", "c"].map((id) => (
-                    <linearGradient
-                      key={id}
-                      id={`panel-grad-${id}`}
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="0%"
-                    >
-                      <stop offset="0%" stopColor="#18CCFC" />
-                      <stop offset="50%" stopColor="#6344F5" />
-                      <stop offset="100%" stopColor="#AE48FF" />
-                    </linearGradient>
-                  ))}
-
-                  {/* clip the animated beams to match the rounded corners */}
-                  <clipPath id="panel-clip">
-                    {/* match the rounded corners (rx/ry bound to computed cornerR in viewBox units) */}
-                    <rect
-                      x="0"
-                      y="0"
-                      width="100"
-                      height="100"
-                      rx={cornerR}
-                      ry={cornerR}
-                    />
-                  </clipPath>
-                </defs>
-
-                <g clipPath="url(#panel-clip)">
-                  {["a", "b", "c"].map((id, i) => {
-                    const duration = 3; // same duration so beams overlap smoothly
-                    const delay = i * 1; // stagger by 1s so there's continuous coverage
-                    return (
-                      <motion.path
-                        key={`border-${id}`}
-                        d={borderD}
-                        stroke={`url(#panel-grad-${id})`}
-                        strokeWidth={2}
-                        vectorEffect="non-scaling-stroke"
-                        strokeLinecap="butt"
-                        strokeLinejoin="miter"
-                        fill="none"
-                        initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{
-                          pathLength: [0, 1],
-                          opacity: [0, 0.6, 0.6, 0],
-                        }}
-                        transition={{
-                          duration,
-                          delay,
-                          repeat: Number.POSITIVE_INFINITY,
-                          ease: "easeInOut",
-                        }}
-                      />
-                    );
-                  })}
-                </g>
-              </motion.svg>
+            <div className="panel-translucent relative overflow-hidden p-6 md:p-8 rounded-2xl border border-[var(--border)]">
+              {/* Modern gradient border glow animation */}
+              <motion.div
+                className="absolute inset-0 rounded-2xl pointer-events-none z-0"
+                style={{
+                  background: "linear-gradient(90deg, #18CCFC, #6344F5, #AE48FF, #18CCFC)",
+                  backgroundSize: "300% 100%",
+                }}
+                animate={{
+                  backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"],
+                  opacity: [0.15, 0.3, 0.15],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "linear",
+                }}
+              />
+              
+              {/* Subtle glow effect */}
+              <motion.div
+                className="absolute -inset-[1px] rounded-2xl pointer-events-none"
+                style={{
+                  background: "linear-gradient(135deg, rgba(24, 204, 252, 0.1), rgba(174, 72, 255, 0.1))",
+                  filter: "blur(8px)",
+                }}
+                animate={{
+                  opacity: [0.3, 0.6, 0.3],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              />
 
               <div className="relative z-10">
                 <h1 className="text-4xl md:text-6xl font-extrabold leading-tight flex items-center gap-3">
@@ -313,10 +209,15 @@ export const About: React.FC = () => {
                   </a>
 
                   <a
-                    href="/resume.pdf"
+                    href="/RachelNababan_CV.pdf"
+                    download="RachelNababan_CV.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-semibold text-foreground hover:bg-muted"
-                    onKeyDown={(e) => handleKeyActivation(e, "/resume.pdf")}
                   >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
                     Download resume
                   </a>
                 </motion.div>
@@ -324,149 +225,76 @@ export const About: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Right: Coverflow carousel */}
+          {/* Right: Single Profile Frame */}
           <motion.div
             variants={item}
-            className="md:col-span-5 flex items-center justify-center overflow-visible"
+            className="md:col-span-5 flex items-center justify-center"
           >
-            <div
-              className="relative w-full h-100 flex items-center justify-center"
-              style={{ perspective: "1000px" }}
+            <motion.div
+              className="relative"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <div
-                className="relative h-full flex items-center justify-center"
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                {carouselItems.map((item, index) => {
-                  const offset = index - activeIndex;
-                  const isActive = index === activeIndex;
-                  const absOffset = Math.abs(offset);
-
-                  return (
-                    <motion.div
-                      key={item.id}
-                      className="absolute cursor-pointer"
-                      style={{
-                        transformStyle: "preserve-3d",
-                      }}
-                      animate={{
-                        x: offset * 140,
-                        z: isActive ? 0 : -100,
-                        scale: isActive ? 1 : 0.75,
-                        rotateY: offset * -35,
-                        opacity: absOffset > 1 ? 0 : 1,
-                      }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 30,
-                      }}
-                      onClick={() => setActiveIndex(index)}
-                    >
-                      <div className="w-72 h-96 rounded-xl overflow-hidden shadow-2xl bg-muted ring-2 ring-border/20">
-                        {item.image && !item.image.includes("/placeholder") ? (
-                          <img
-                            src={item.image}
-                            alt={item.label}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-sky-500 to-indigo-600 text-white">
-                            <div className="text-6xl font-bold mb-4">
-                              {name?.[0] ?? "S"}
-                            </div>
-                            <div className="text-sm font-medium opacity-80">
-                              {item.label}
-                            </div>
-                          </div>
-                        )}
+              {/* Profile frame with modern styling */}
+              <div className="relative w-80 h-96 rounded-2xl overflow-hidden shadow-2xl">
+                {/* Animated gradient border */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl"
+                  style={{
+                    background: "linear-gradient(135deg, #18CCFC, #6344F5, #AE48FF)",
+                    padding: "3px",
+                  }}
+                  animate={{
+                    rotate: [0, 360],
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "linear",
+                  }}
+                >
+                  <div className="w-full h-full bg-background rounded-2xl" />
+                </motion.div>
+                
+                {/* Profile image */}
+                <div className="absolute inset-[3px] rounded-2xl overflow-hidden">
+                  {carouselItems[0]?.image && !carouselItems[0].image.includes("/placeholder") ? (
+                    <img
+                      src={carouselItems[0].image}
+                      alt={carouselItems[0].label || "Profile"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-sky-500 via-indigo-600 to-purple-600 text-white">
+                      <div className="text-7xl font-bold mb-4">
+                        {name?.[0] ?? "R"}
                       </div>
+                      <div className="text-lg font-medium opacity-90">
+                        {name}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
-                      {isActive && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-foreground whitespace-nowrap"
-                        >
-                          {item.label}
-                        </motion.div>
-                      )}
-                    </motion.div>
-                  );
-                })}
+                {/* Glow effect */}
+                <motion.div
+                  className="absolute -inset-2 rounded-2xl pointer-events-none"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(24, 204, 252, 0.3), rgba(174, 72, 255, 0.3))",
+                    filter: "blur(20px)",
+                    zIndex: -1,
+                  }}
+                  animate={{
+                    opacity: [0.4, 0.7, 0.4],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                  }}
+                />
               </div>
-
-              {/* Navigation arrows (only when multiple images) */}
-              {carouselItems.length > 1 && (
-                <>
-                  <button
-                    className="absolute left-4 z-20 w-10 h-10 rounded-full bg-background/80 backdrop-blur shadow-lg flex items-center justify-center hover:bg-background transition-colors disabled:opacity-30"
-                    onClick={() =>
-                      setActiveIndex((prev) => Math.max(0, prev - 1))
-                    }
-                    disabled={activeIndex === 0}
-                    aria-label="Previous slide"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-
-                  <button
-                    className="absolute right-4 z-20 w-10 h-10 rounded-full bg-background/80 backdrop-blur shadow-lg flex items-center justify-center hover:bg-background transition-colors disabled:opacity-30"
-                    onClick={() =>
-                      setActiveIndex((prev) =>
-                        Math.min(carouselItems.length - 1, prev + 1),
-                      )
-                    }
-                    disabled={activeIndex === carouselItems.length - 1}
-                    aria-label="Next slide"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* Navigation dots (only when multiple images) */}
-            {carouselItems.length > 1 && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex justify-center gap-2">
-                {carouselItems.map((item, index) => (
-                  <button
-                    key={item.id}
-                    className={`h-2 rounded-full transition-all ${
-                      index === activeIndex
-                        ? "bg-foreground w-8"
-                        : "bg-foreground/30 hover:bg-foreground/50 w-2"
-                    }`}
-                    onClick={() => setActiveIndex(index)}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
-            )}
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>
