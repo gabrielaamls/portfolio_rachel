@@ -1,65 +1,87 @@
-# Portfolio Website
+# Rachel Nababan - Portfolio Website
 
-A modern, responsive portfolio website built with React, TypeScript, and Tailwind CSS. Features an interactive project showcase, skills visualization, CLI-style resume, and smooth animations.
+A modern, responsive portfolio website showcasing Rachel Nababan's work as an Informatics Student, Frontend Developer, and UI/UX Designer. Built with React, TypeScript, and Tailwind CSS, featuring interactive project showcases, comprehensive skills visualization, and smooth animations.
 
-🔗 **Live Demo**: [https://satya00089.github.io/portfolio](https://satya00089.github.io/portfolio)
+🔗 **Live Demo**: [https://gabrielaamls.github.io/portfolio_rachel](https://gabrielaamls.github.io/portfolio_rachel)
 
-> Free, modern developer portfolio template with:
+> Professional portfolio featuring:
 >
-> - CLI-style resume
-> - Animated skill visualizations
-> - Dark/light theme
-> - Markdown-powered project content
+> - Comprehensive CV integration
+> - Interactive project showcase with detailed modal views
+> - Technical and soft skills visualization
+> - Work experience timeline
+> - Organization and leadership activities
+> - Dark/light theme support
+> - Downloadable CV in PDF format
+
+## 👩‍💻 About Rachel
+
+Rachel Nababan is an Informatics student at Del Institute of Technology with a strong passion for:
+- **Frontend Development** - HTML, CSS, JavaScript, PHP, Laravel
+- **UI/UX Design** - Figma, User-centered design
+- **Quality Assurance** - Manual testing, Katalon, Postman, Selenium
+
+Currently seeking opportunities to gain professional experience and contribute to real-world technology projects.
 
 ## 📸 Preview
 
-![Home Preview](public/preview-home.png)
-
-![CLI Resume Preview](public/preview-cli.png)
+![Portfolio Preview](public/preview-home.png)
 
 ## ✨ Features
 
-- **Interactive Portfolio**: Showcase your projects with modal views and detailed descriptions
-- **Dynamic Resume**: Interactive resume page with print functionality
-- **CLI Resume**: Terminal-style resume interface for a unique user experience
-- **Skills Visualization**: Circular progress bars and interactive skill displays
-- **Theme Support**: Dark/Light theme toggle with smooth transitions
-- **Smooth Animations**: Powered by Framer Motion for engaging UI interactions
-- **Markdown Support**: Project descriptions rendered with GitHub-flavored markdown
-- **Contact Form**: Interactive contact form for visitor inquiries
-- **Responsive Design**: Fully responsive across all device sizes
-- **Scroll Enhancements**: Progress bar and scroll-to-top functionality
+- **Interactive About Section**: Professional hero section with animated gradient border and profile showcase
+- **Work Experience Timeline**: Detailed work history with expandable descriptions and tech stack tags
+- **Project Showcase**: Three major projects with modal views, GitHub links, and detailed contributions
+- **Comprehensive Skills Section**: 
+  - Frontend Development (HTML5, CSS3, JavaScript, PHP, Laravel)
+  - UI/UX Design (Figma, Draw.io)
+  - Quality Assurance & Testing (Katalon, Postman, Selenium)
+  - Programming Languages (Python, C, SQL)
+  - Databases (MySQL)
+- **Soft Skills Display**: Leadership, Teamwork, Communication, Problem Solving, and more
+- **Organization Activities**: Leadership roles and community involvement
+- **CVQuick Start
 
-## 🚀 Use this as your own portfolio
+This portfolio is specifically built for Rachel Nababan. If you're interested in the template structure, you can fork and customize it.
 
-This repository is intended to be a ready-to-customize portfolio template. There are two easy ways to get started:
+### Installation
 
-### Option A — Use the GitHub "Use this template" button
-
-1. On the GitHub page for this repo click the **"Use this template"** button
-2. Create a new repository under your account
-3. Clone your new repo locally and follow the quick-start checklist below
-
-### Option B — Clone directly
+1. Clone the repository:
 
 ```bash
-git clone https://github.com/satya00089/portfolio.git my-portfolio
-cd my-portfolio
+git clone https://github.com/gabrielaamls/portfolio_rachel.git
+cd portfolio_rachel
+```
+
+2. Install dependencies:
+
+```bash
 npm install
+```
+
+3. Start the development server:
+
+```bash
 npm run dev
 ```
 
-Quick start (do these first)
+4. Open your browser and navigate to `http://localhost:5173`
 
-- Open `src/config/portfolioData.ts` and replace the sample data with your name, bio, links, and projects — this is the single most important file to customize.
-- Replace social/profile links and contact details.
-- Update or remove example projects (the `projects` array) and add your screenshots or links.
-- (Optional) Add preview images in `public/` named `preview-home.png`, `preview-projects.png`, `preview-cli.png` so the GitHub template page renders them.
-- If you plan to deploy to GitHub Pages, update `package.json` -> `homepage` and `vite.config.ts` -> `base`.
+## 📝 Key Content
 
-Why `src/config/portfolioData.ts`?
+### Projects
+1. **SIMBA** - Student Guidance and Guardianship Management Information System
+2. **IT Del SIS** - Student Information System for violation monitoring
+3. **SMA N 1 Balige Website** - School information system
 
-All site content (projects, skills, education, experience, and basic profile info) is driven by `src/config/portfolioData.ts`. Editing that file is the fastest way to make this site yours.
+### Experience
+- Frontend Developer & UI/UX Designer at PT Hutabyte Abhinaya Inovasi
+- Software Developer Intern at PT Goritax Prospera Indonesia
+- Lecturer Assistant at Del Institute of Technology
+
+### Education
+- Bachelor of Informatics, Del Institute of Technology (2022-2026)
+- GPA: 3.21/4.00t way to make this site yours.
 
 ## ☁️ One-click Deploy
 
@@ -83,47 +105,43 @@ All site content (projects, skills, education, experience, and basic profile inf
 - **Lucide React** - Icon library
 - **React Icons** - Additional icon sets
 
-### Additional Libraries
-
-- **React Markdown** - Markdown rendering
-- **React Circular Progressbar** - Skill visualization
-- **React Scroll** - Smooth scrolling functionality
-- **GitHub Markdown CSS** - GitHub-style markdown styling
-
-## 📁 Project Structure
-
-```
-src/
-├── components/          # Reusable UI components
-│   ├── shared/         # Shared components (Header, Footer, etc.)
-│   └── resume/         # Resume-specific components
+### Additional LibrariesScrollProgressBar)
+│   ├── About.tsx       # Hero/About section with profile
+│   ├── ProjectCard.tsx # Individual project cards
+│   ├── ProjectModal.tsx # Project detail modal
+│   └── ...
 ├── pages/              # Page components
-│   ├── PortfolioPage.tsx
-│   └── ResumePage.tsx
+│   └── PortfolioPage.tsx # Main portfolio page
 ├── config/             # Configuration files
-│   └── portfolioData.ts
+│   └── portfolioData.ts # All portfolio content and data
 ├── context/            # React contexts (Theme)
 ├── types/              # TypeScript type definitions
-└── assets/             # Static assets
+│   └── portfolio.ts    # Portfolio data types
+├── assets/             # Static assets
+└── public/             # Public assets
+    └── RachelNababan_CV.pdf # Downloadable CV
 ```
 
-## 🚀 Getting Started
+## 🎨 Content Management
 
-### Prerequisites
+### Portfolio Data
 
-- Node.js (v18 or higher)
-- npm or yarn package manager
+All content is managed through `src/config/portfolioData.ts`, including:
 
-### Installation
+- **Personal Information**: Name, title, contact details, social links
+- **Skills**: Technical skills organized by category with proficiency levels
+- **Soft Skills**: Professional competencies with descriptions
+- **Experience**: Work history with detailed responsibilities
+- **Projects**: Portfolio projects with images, descriptions, and tech stacks
+- **Education**: Academic background
+- **Organizations**: Leadership and community involvement
 
-1. Clone the repository:
+### Customization
 
-```bash
-git clone https://github.com/satya00089/portfolio.git
-cd portfolio
-```
-
-2. Install dependencies:
+To update content:
+1. Edit `src/config/portfolioData.ts`
+2. Replace profile image in `public/profile.jpg`
+3. Update CV file in `public/RachelNababan_CV.pdf
 
 ```bash
 npm install
@@ -137,41 +155,61 @@ npm run dev
 
 4. Open your browser and navigate to `http://localhost:5173`
 
-## 📝 Available Scripts
+## � Deployment
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build locally
-- `npm run lint` - Run ESLint
-- `npm run deploy` - Deploy to GitHub Pages
+To deploy to GitHub Pages:
 
-## 🎨 Customization
+1. Update `package.json`:
+```json
+"homepage": "https://gabrielaamls.github.io/portfolio_rachel"
+```
 
-### Update Portfolio Data
+2. Update `vite.config.ts`:
+```typescript
+base: '/portfolio_rachel/'
+```
 
-Edit `src/config/portfolioData.ts` to customize:
+3. Run deployment:
+```bash
+npm run deploy
+```
 
-- Personal information
-- Projects
-- Skills
-- Experience
-- Education
+## 🛠️ Built With
 
-### Modify Theme
+### Core Technologies
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
 
-Theme configuration is managed through `src/context/ThemeContext.ts` and `src/components/ThemeProvider.tsx`.
+### Styling & Animation
+- **Tailwind CSS 4** - Utility-first CSS
+- **Framer Motion** - Animation library
+- **Custom CSS** - Additional styling
 
-### Styling
+### UI Components & Icons
+- **React Icons** - Icon library (Simple Icons, Hero Icons)
+- **Lucide React** - Additional icons
 
-Tailwind configuration can be modified in `tailwind.config.js`.
+### Additional Features
+- **RePortfolio Owner
 
-## 🌐 Deployment
+**Rachel Putri Sevira Nababan**
 
-This project is configured for deployment to GitHub Pages:
+- Informatics Student at Del Institute of Technology
+- Frontend Developer & UI/UX Designer
+- GitHub: [@RachelNababan](https://github.com/RachelNababan)
+- LinkedIn: [rachel-putri-sevira-nababan](https://www.linkedin.com/in/rachel-putri-sevira-nababan)
+- Email: rachelnababan0509@gmail.com
 
-1. Update the `homepage` field in `package.json` with your GitHub Pages URL
-2. Update the `base` field in `vite.config.ts` to match your repository name
-3. Run the deployment command:
+## 🙏 Acknowledgments
+
+- Original template structure inspired by modern portfolio designs
+- Built with modern web technologies and best practices
+- Integrated with CV data for comprehensive professional presentation
+
+---
+
+Built with ❤️ by Rachel Nababan | Powered bynt command:
 
 ```bash
 npm run deploy
