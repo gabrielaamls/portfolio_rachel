@@ -13,9 +13,8 @@ import { useTheme } from "../../context/ThemeContext";
 
 type NavLink = { href: string; label: string };
 
-export const Header: React.FC<{ links?: NavLink[]; onTryCLI?: () => void }> = ({
+export const Header: React.FC<{ links?: NavLink[] }> = ({
   links = [],
-  onTryCLI,
 }) => {
   const { dark, toggle } = useTheme();
   const headerRef = useRef<HTMLElement | null>(null);
